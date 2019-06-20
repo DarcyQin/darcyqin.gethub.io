@@ -5,7 +5,7 @@ date:   2019-06-20 23:30
 categories: algorithm
 tags: algorithm, ML
 excerpt: 
-mathjax: false
+mathjax: true
 ---
 
 * content
