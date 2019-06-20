@@ -1,15 +1,18 @@
 ---
-layout:     post
-title:      "EM算法"
-subtitle:   "EM算法学习"
-date:       2015-09-22
-author:     "DarcyQin"
-header-img: "img/404-bg.jpg"
-tags:
-    - ML
+layout: post
+title:  "EM算法"
+date:   2019-06-20 23:30
+categories: algorithm
+tags: algorithm, ML
+excerpt: 
+mathjax: true
 ---
 
-### 凸函数
+* content
+{:toc}
+
+
+# 凸函数
 开始EM算法前，我们先讨论凸函数。现设一函数f(x)，在该函数定义域的凸区间内任取两点$x_1$,$x_2$, 其中$x_1<x_2$,设一点$x=q_1x_1$
 
 
@@ -20,7 +23,7 @@ tags:
 连续函数的一阶导数就是相应的切线斜率。一阶导数大于0，则递增；一阶倒数小于0，则递减；一阶导数等于0，则不增不减。
 而二阶导数可以反映图象的凹凸。二阶导数大于0，图象为凹；二阶导数小于0，图象为凸；二阶导数等于0，不凹不凸。
 
-### Jensen不等式
+# Jensen不等式
 如果函数f是凸函数，x是随机变量，
 $$x_1$$
 
