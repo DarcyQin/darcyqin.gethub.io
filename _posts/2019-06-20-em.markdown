@@ -65,6 +65,75 @@ $$(q_1,...,q_n>0,q_1+...+q_n=1)$$
 
 将形式更加简化得：
 
-$$f(\frac{\sum_{i=1}^np_ix_i}{\sum_{i=1}^np_i})≤\frac{\sum_{i=1}^np_if(x_i)}{\sum_{i=1}^np_i}$$
+$$f(\sum_{i=1}^np_ix_i)≤\sum_{i=1}^np_if(x_i)$$
 
+在概率论中，如果把$p_i$看成是取值为$x_i$的离散变量x的概率分布，那么上式可以写成：
+
+$$f(E(x))≤E(f(x))$$
+
+其中$E(.)$表示期望。
+
+## EM算法
+EM算法是一种迭代算法，主要用来处理含有隐变量（hidden variable）的概率参数的极大似然估计，或者极大后验概率估计。EM算法的每次迭代分为两步：E步，求期望；M步，求极大。所以该算法称为期望极大算法（expectation maximization algorithm），简称EM算法。
+### EM算法公式推导
+推导过程参照李航<统计学习方法>，加上个人理解。
+
+当我们面对一个含有隐变量的概率模型时，我们的最终目标是要极大化观测数据$Y$关于参数$\theta$的对数似然函数，即极大化：
+
+$$L(\theta)=logP(Y|\theta)$$
+
+将所有隐变量于观测数据$Y$的所有联合概率相加，即：
+
+$$P(Y|\theta)=\sum_ZP(Y,Z|\theta)$$
+
+
+$$L(\theta)=\log\sum_ZP(Y,Z|\theta)=\log\left(\sum_ZP(Y|Z,\theta)P(Z|\theta)\right)$$
+
+注意到要极大化上式非常困难的，式中不仅有未观测数据$Z$,还包含了求和的对数，对未知变量求导后等于0的式子仍然十分复杂。
+我们可以通过迭代的方式不断的逼近极大化的$L(\theta)$，假设在第i次的迭代后的$\theta$的估计值是$theta^{(i)}$,如果能够使新估计的$\theta$，让$L(\theta)$增加，即，使得$L(\theta)>L(\theta^{(i)})$,那么在一次次的迭代之后，最终会逼近$L(\theta)$的极大值。
+即：
+	
+$$L(\theta)-L(\theta^{(i)})=\log\left(\sum_ZP(Y|Z,\theta)P(Z|\theta)\right)-logP(Y|\theta^{(i)})$$
+
+利用上面的Jensen不等式，得到其下界：
+
+	
+$$L(\theta)-L(\theta^{(i)})=\log\left(\sum_ZP(Y|Z,\theta)P(Z|\theta)\right)-logP(Y|\theta^{(i)})$$
+
+$$L(\theta)-L(\theta^{(i)})=\log\left(\sum_ZP(Z|Y,\theta^{(i)})\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})}\right)-logP(Y|\theta^{(i)})$$
+
+$$≥\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})}-logP(Y|\theta^{(i)})$$
+
+
+因为$P(Z|Y,\theta^{(i)})$是Z关于Y的概率分布，所以:
+$$\sum_ZP(Z|Y,\theta^{(i)})=1$$
+即上式：
+
+$$≥\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})}-\sum_ZP(Z|Y,\theta^{(i)})logP(Y|\theta^{(i)})$$
+
+$$=\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})P(Y|\theta^{(i)})}$$
+
+令：
+
+$$B(\theta,\theta^{(i)})=L(\theta^{(i)})+\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})P(Y|\theta^{(i)})}$$
+
+则：$L(\theta)≥B(\theta,\theta^{(i)})$,即函数$B(\theta,\theta^{(i)})$是$L(\theta)$的一个下界，由上面的式子可知：
+
+$$L(\theta^{(i)})=B(\theta^{(i)},\theta^{(i)})$$
+
+因此对于任何能使$B(\theta,\theta^{(i)})$增大的$\theta$，也同时可以使$L(\theta)$增大，为了使$L(\theta)$增大，选择$\theta^{(i)}$使得$B(\theta,\theta^{(i)})$达到极大，即：
+
+$$\theta^{(i+1)}=arg\max_{\theta}B(\theta,\theta^{(i)})$$
+
+去掉不相关的常数：
+
+$$\theta^{(i+1)}=arg\max_{\theta}\left(L(\theta^{(i)})+\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})P(Y|\theta^{(i)})}\right)$$
+
+$$=arg\max_{\theta}\left(\sum_ZP(Z|Y,\theta^{(i)})\log(P(Y|Z,\theta)P(Z|\theta))\right)$$
+
+$$=arg\max_{\theta}\left(\sum_ZP(Z|Y,\theta^{(i)})logP(Y,Z|\theta)\right)$$
+
+$$=arg\max_{\theta}Q(\theta,\theta^{(i)})$$
+
+### EM算法的收敛性证明
 
