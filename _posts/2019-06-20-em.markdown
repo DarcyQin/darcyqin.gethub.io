@@ -15,7 +15,7 @@ mathjax: true
 ## 凸函数
 开始EM算法前，我们先讨论凸函数。现设一函数f(x)，在该函数定义域的凸区间内任取两点$x_1$,$x_2$, 其中$x_1<x_2$,设一点$x=q_1x_1$
 
-![image03](img/tufunc.png)
+![image03](https://darcyqin.github.io/img/tufunc.png)
 凸函数是一个定义在某个向量空间的凸子集 C（区间）上的实值函数 f，如果在其定义域 C 上的任意两点 $x_1$,$x_2$,
 
 也就是说凸函数任意两点的割线位于函数图形上方， 这也是Jensen不等式的两点形式。
