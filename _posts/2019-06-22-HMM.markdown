@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "隐马尔可夫链"
+date:   2019-06-22 00:30
+categories: algorithm
+tags: algorithm, ML
+excerpt: 
+mathjax: true
+---
+
+* content
+{:toc}
+
+### 马尔科夫过程
