@@ -97,13 +97,15 @@ $$L(\theta)-L(\theta^{(i)})=\log\left(\sum_ZP(Y|Z,\theta)P(Z|\theta)\right)-logP
 
 利用上面的Jensen不等式，得到其下界：
 
-	
-$$L(\theta)-L(\theta^{(i)})=\log\left(\sum_ZP(Y|Z,\theta)P(Z|\theta)\right)-logP(Y|\theta^{(i)})$$
+$$
+\begin{align}	
+L(\theta)-L(\theta^{(i)})&=\log\left(\sum_ZP(Y|Z,\theta)P(Z|\theta)\right)-logP(Y|\theta^{(i)})\\
 
-$$L(\theta)-L(\theta^{(i)})=\log\left(\sum_ZP(Z|Y,\theta^{(i)})\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})}\right)-logP(Y|\theta^{(i)})$$
+&=\log\left(\sum_ZP(Z|Y,\theta^{(i)})\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})}\right)-logP(Y|\theta^{(i)})\\
 
-$$≥\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})}-logP(Y|\theta^{(i)})$$
-
+&≥\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})}-logP(Y|\theta^{(i)})
+\end{align}
+$$
 
 因为$P(Z|Y,\theta^{(i)})$是Z关于Y的概率分布，所以:
 $$\sum_ZP(Z|Y,\theta^{(i)})=1$$
@@ -127,13 +129,56 @@ $$\theta^{(i+1)}=arg\max_{\theta}B(\theta,\theta^{(i)})$$
 
 去掉不相关的常数：
 
-$$\theta^{(i+1)}=arg\max_{\theta}\left(L(\theta^{(i)})+\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})P(Y|\theta^{(i)})}\right)$$
+$$
+\begin{align}
+\theta^{(i+1)}&=arg\max_{\theta}\left(L(\theta^{(i)})+\sum_ZP(Z|Y,\theta^{(i)})\log\frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta^{(i)})P(Y|\theta^{(i)})}\right)\\
 
-$$=arg\max_{\theta}\left(\sum_ZP(Z|Y,\theta^{(i)})\log(P(Y|Z,\theta)P(Z|\theta))\right)$$
+&=arg\max_{\theta}\left(\sum_ZP(Z|Y,\theta^{(i)})\log(P(Y|Z,\theta)P(Z|\theta))\right)\\
 
-$$=arg\max_{\theta}\left(\sum_ZP(Z|Y,\theta^{(i)})logP(Y,Z|\theta)\right)$$
+&=arg\max_{\theta}\left(\sum_ZP(Z|Y,\theta^{(i)})logP(Y,Z|\theta)\right)\\
 
-$$=arg\max_{\theta}Q(\theta,\theta^{(i)})$$
+&=arg\max_{\theta}Q(\theta,\theta^{(i)})
+\end{align}
+$$
 
 ### EM算法的收敛性证明
 
+由于：
+	
+$$P(Y|\theta)=\frac{P(Y,Z|\theta)}{P(Z|Y,\theta)}$$
+
+两边取对数有：
+
+$$logP(Y|\theta)=logP(Y,Z|\theta)-logP(Z|Y,\theta)$$
+
+等式两边同时对分布
+$$P(Z|Y,\theta^{(i)})$$
+求期望得：
+
+$$\sum_ZlogP(Y|\theta)P(Z|Y,\theta^{(i)})=\sum_ZlogP(Y,Z|\theta)P(Z|Y,\theta^{(i)})-\sum_ZlogP(Z|Y,\theta)P(Z|Y,\theta^{(i)})$$
+
+等式左边与Z无关，分布求和等于1，于是：
+
+$$
+\begin{align}
+logP(Y|\theta)&=\sum_ZlogP(Y,Z|\theta)P(Z|Y,\theta^{(i)})-\sum_ZlogP(Z|Y,\theta)P(Z|Y,\theta^{(i)})\\
+&=Q(\theta,\theta^{(i)})-H(\theta,\theta^{(i)})
+\end{align}
+$$
+
+分别取$\theta$为$\theta^{(i)}$和$\theta^{(i+1)}$并相减，有：
+
+$$logP(Y|\theta^{(i+1)})-logP(Y|\theta^{(i)})=[Q(\theta^{(i+1)},\theta^{(i)})-Q(\theta^{(i)},\theta^{(i)})]-[H(\theta^{(i+1)},\theta^{(i)})-H(\theta^{(i)},\theta^{(i)})]$$
+
+要使收敛性成立，只需上式右端是非负即可，又由于$Q(\theta^{(i+1)})$是$Q(\theta,\theta^{(i)})$达到极大，所以有$Q(\theta^{(i+1)},\theta^{(i)})-Q(\theta^{(i)},\theta^{(i)})≥0$, 要使右端为非负，只需$H(\theta^{(i+1)},\theta^{(i)})-H(\theta^{(i)},\theta^{(i)})≤0$,于是：
+
+$$
+\begin{align}
+H(\theta^{(i+1)},\theta^{(i)})-H(\theta^{(i)},\theta^{(i)})&=\sum_ZlogP(Z|Y,\theta^{(i+1)})P(Z|Y,\theta^{(i)})-\sum_ZlogP(Z|Y,\theta^{(i)})P(Z|Y,\theta^{(i)})\\
+&=\sum_Z\left(log\frac{P(Z|Y,\theta^{(i+1)})}{P(Z|Y,\theta^{(i)})}\right)P(Z|Y,\theta^{(i)})\\
+&≤log\left(\sum_Z\frac{P(Z|Y,\theta^{(i+1)})}{P(Z|Y,\theta^{(i)})}P(Z|Y,\theta^{(i)})\right)\\
+&=log\left(\sum_ZP(Z|Y,\theta^{(i+1)})\right)=0
+\end{align}
+
+即收敛性得证。
+$$
