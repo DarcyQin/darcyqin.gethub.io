@@ -179,6 +179,6 @@ H(\theta^{(i+1)},\theta^{(i)})-H(\theta^{(i)},\theta^{(i)})&=\sum_ZlogP(Z|Y,\the
 &≤log\left(\sum_Z\frac{P(Z|Y,\theta^{(i+1)})}{P(Z|Y,\theta^{(i)})}P(Z|Y,\theta^{(i)})\right)\\
 &=log\left(\sum_ZP(Z|Y,\theta^{(i+1)})\right)=0
 \end{align}
+$$
 
 即收敛性得证。
-$$
